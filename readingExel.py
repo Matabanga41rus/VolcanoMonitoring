@@ -1,5 +1,5 @@
 import xlrd
-from app.models import Volcano, SeismicObservation, SeismicEventType, Observation
+
 
 pathExcel = 'C:/Users/Denis/Desktop/excel_python/26_Dlz.xlsx'
 
@@ -12,6 +12,15 @@ times = sheet.col_values(3)
 times.remove('')
 station = sheet.col_values(4)
 station.remove('')
+volcanoes = sheet.col_values(5)
+typeEvents = sheet.col_values(6)
+countEvents = sheet.col_values(7)
+duration = sheet.col_values(8)
+
+
+
+
+
 
 
 
