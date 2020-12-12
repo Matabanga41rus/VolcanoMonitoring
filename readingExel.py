@@ -1,7 +1,7 @@
 import xlrd
 
 
-pathExcel = 'C:/Users/Denis/Desktop/excel_python/26_Dlz.xlsx'
+pathExcel = './26_Dlz.xlsx'
 
 rb = xlrd.open_workbook(pathExcel)
 sheet = rb.sheet_by_index(0)

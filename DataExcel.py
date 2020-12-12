@@ -1,7 +1,7 @@
 import pandas as pd
 
 nameFile = '26_Dlz.xlsx'
-pathExcel = 'C:/Users/Denis/Desktop/excel_python/' + nameFile
+pathExcel = './' + nameFile
 
 data_pd = pd.read_excel(pathExcel, sheet_name='26_Dlz')
 
