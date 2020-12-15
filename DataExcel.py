@@ -11,7 +11,7 @@ station = data_pd.iloc[:,[4]]
 
 volcano = data_pd['вулкан']
 
-print(times)
+
 
 
 
