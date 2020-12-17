@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.models import Volcano, State_volcano
-from app.forms import VolcanoForm, StateVolcanoForm
+from app.web.models import Volcano, State_volcano
+from app.web.forms import VolcanoForm, StateVolcanoForm
 
 
 @app.route('/')

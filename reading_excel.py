@@ -1,5 +1,5 @@
 import xlrd
-from utilsReadingExcel import Utils
+from utils_reading_excel import Utils
 
 
 pathExcel = './26_Dlz.xlsx'

@@ -17,4 +17,4 @@ class StateVolcanoForm(FlaskForm):
     max_pgd_height = IntegerField('Макс. высота ПГД ', validators=[DataRequired()])
     observ_ash_emissions = StringField('Наблюдаемые пепловые выбросы', validators=[DataRequired()])
     hazard_code = StringField('Код опасности', validators=[DataRequired()])
-    sub_add = SubmitField('Добавить')
+    sub_add = SubmitField('Добавь')
