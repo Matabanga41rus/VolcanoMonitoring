@@ -1,6 +1,24 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField, IntegerField, SubmitField, FloatField, DateField
+from wtforms import TimeField, SelectField, DateField, SubmitField, StringField, IntegerField, SubmitField, FloatField, DateField
 from wtforms.validators import DataRequired
+
+class ObservationForm(FlaskForm):
+    obsDate = DateField('Дата', validators=[DataRequired()])
+    obsVolcanoId = SelectField('Вулкан', validators=[DataRequired()])
+    obsCode = StringField('Код опасности', validators=[DataRequired()])
+
+class SeismicObservationForm(FlaskForm):
+    seisobsStationId = SelectField('Станция', validators=[DataRequired()])
+    seisobsStartTime = TimeField('От', validators=[DataRequired()])
+    seisobsEndTime = TimeField('До', validators=[DataRequired()])
+    seisobsHypocenter = StringField('Эпицентр', validators=[DataRequired()])
+    seisobsWeakEventCount = StringField('Кол-во слабых событий', validators=[DataRequired()])
+    seisobsStrongEventCount = StringField('Кол-во сильныхсобытий', validators=[DataRequired()])
+    seisobsTypeEventId = SelectField('Тип события')
+    seisobsAvgAT = FloatField('Среднее А/Т', validators=[DataRequired()])
+    seisobsMaxAT =FloatField('Максимальное А/Т', validators=[DataRequired()])
+    seisobsDuration = FloatField('Продолжительность', validators=[DataRequired()])
+    sub_add = SubmitField('Добавить')
 
 class VolcanoForm(FlaskForm):
     namev = StringField('Название', validators=[DataRequired()])
