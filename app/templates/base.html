@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Мониторинг активности вулканов</title>
+</head>
+<body>
+<div>
+    <a href="{{ url_for('index') }}">
+        <h3>Мониторинг активности вулканов:</h3>
+    </a>
+    <a href="{{ url_for('index') }}"> &nbsp;Оперативная информация&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Настраиваемая выборка&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Фото/видео наблюдения&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Сводная таблица&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Добавить&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Редактировать</a>
+</div>
+{% block content %}{% endblock %}
+</body>
+</html>

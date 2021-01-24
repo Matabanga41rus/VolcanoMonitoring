@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/state_volcanoes" style="width: max-content" method="POST">
+    {{ form.hidden_tag() }}
+    <fieldset>
+        <legend>Add volcano</legend>
+        <p>
+        {{form.namev.label}}<br>
+        {{form.namev(size=25)}}<br>
+        {{error}}
+        </p>
+        <p>
+        {{form.date_state.label}}<br>
+        {{form.date_state(size=6)}}<br>
+        </p>
+        <p>
+        {{form.thermal_anomaly.label}}<br>
+        {{form.thermal_anomaly(size=6)}}<br>
+        </p>
+        <p>
+        {{form.number_events.label}}<br>
+        {{form.number_events(size=6)}}<br>
+        </p>
+        <p>
+        {{form.max_pgd_height.label}}<br>
+        {{form.max_pgd_height(size=6)}}<br>
+        </p>
+        <p>
+        {{form.observ_ash_emissions.label}}<br>
+        {{form.observ_ash_emissions(size=6)}}<br>
+        </p>
+        <p>
+        {{form.hazard_code.label}}<br>
+        {{form.hazard_code(size=6)}}<br>
+        </p>
+        <p>{{ form.sub_add() }}</p>
+
+    </fieldset>
+</form>
+<h3>Свойства вулканов</h3>
+<table style="float:left">
+    <tr><th>Название</th>
+        <th>Дата</th>
+        <th>Термальная аномалия</th>
+        <th>Количество событий</th>
+        <th>Макс. высота ПГД </th>
+        <th>Наблюдаемые пепловые выбросы</th>
+        <th>Код опасности</th>
+    </tr> <!--ряд с ячейками заголовков-->
+    {% for state_volcano in state_volcanoes%}
+    <tr><td>{{state_volcano.namev}}</td>
+        <td>{{state_volcano.date_state}}</td>
+        <td>{{state_volcano.thermal_anomaly}}</td>
+        <td>{{state_volcano.number_events}}</td>
+        <td>{{state_volcano.max_pgd_height}}</td>
+        <td>{{state_volcano.observ_ash_emissions}}</td>
+        <td>{{state_volcano.hazard_code}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
