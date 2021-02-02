@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/login" style="width: max-content" method="POST">
+    {{ loginForm.hidden_tag() }}
+    <fieldset>
+        <legend>Sign in</legend>
+        <p>
+        {{loginForm.opSurname.label}}<br>
+        {{loginForm.opSurname(size=25)}}<br>
+        </p>
+        <p>
+        {{loginForm.opPassword.label}}<br>
+        {{loginForm.opPassword(size=10)}}<br>
+        </p>
+        <p>{{ loginForm.login() }}</p>
+
+    </fieldset>
+</form>
+{% endblock %}
