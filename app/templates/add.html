@@ -1,62 +1,65 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="/state_volcanoes" style="width: max-content" method="POST">
+<h4>Дата добавления данных: {{date}}</h4>
+<form action="/add" style="width: max-content" method="POST">
     {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
     <fieldset>
-        <legend>Add volcano</legend>
+        <legend>Add Seismic observation</legend>
+        {{form.volcanoId.label}}<br>
+        {{form.volcanoId()}}<br>
         <p>
-        {{form.namev.label}}<br>
-        {{form.namev(size=25)}}<br>
-        {{error}}
+        {{form.seisobsStationId.label}}<br>
+        {{form.seisobsStationId()}}<br>
+        </p>
+          <p>
+        {{form.seisobsEventTypeId.label}}<br>
+        {{form.seisobsEventTypeId()}}<br>
         </p>
         <p>
-        {{form.date_state.label}}<br>
-        {{form.date_state(size=6)}}<br>
+        {{form.seisobsStartTime.label}}<br>
+        {{form.seisobsStartTime()}}<br>
         </p>
         <p>
-        {{form.thermal_anomaly.label}}<br>
-        {{form.thermal_anomaly(size=6)}}<br>
+        {{form.seisobsEndTime.label}}<br>
+        {{form.seisobsEndTime()}}<br>
+        </p>
+         <p>
+        {{form.seisobsPeriodStartTime.label}}<br>
+        {{form.seisobsPeriodStartTime()}}<br>
         </p>
         <p>
-        {{form.number_events.label}}<br>
-        {{form.number_events(size=6)}}<br>
+        {{form.seisobsPeriodEndTime.label}}<br>
+        {{form.seisobsPeriodEndTime()}}<br>
         </p>
         <p>
-        {{form.max_pgd_height.label}}<br>
-        {{form.max_pgd_height(size=6)}}<br>
+        {{form.seisobsEventCount.label}}<br>
+        {{form.seisobsEventCount()}}<br>
         </p>
         <p>
-        {{form.observ_ash_emissions.label}}<br>
-        {{form.observ_ash_emissions(size=6)}}<br>
+        {{form.seisobsWeak.label}}<br>
+        {{form.seisobsWeak()}}<br>
         </p>
         <p>
-        {{form.hazard_code.label}}<br>
-        {{form.hazard_code(size=6)}}<br>
+        {{form.seisobsAvgAT.label}}<br>
+        {{form.seisobsAvgAT()}}<br>
+        </p>
+        <p>
+        {{form.seisobsMaxAT.label}}<br>
+        {{form.seisobsMaxAT()}}<br>
+        </p>
+        <p>
+        {{form.seisobsEnergyClass.label}}<br>
+        {{form.seisobsEnergyClass()}}<br>
+        </p>
+        <p>
+        {{form.seisobsDuration.label}}<br>
+        {{form.seisobsDuration()}}<br>
         </p>
         <p>{{ form.sub_add() }}</p>
 
     </fieldset>
 </form>
-<h3>Свойства вулканов</h3>
-<table style="float:left">
-    <tr><th>Название</th>
-        <th>Дата</th>
-        <th>Термальная аномалия</th>
-        <th>Количество событий</th>
-        <th>Макс. высота ПГД </th>
-        <th>Наблюдаемые пепловые выбросы</th>
-        <th>Код опасности</th>
-    </tr> <!--ряд с ячейками заголовков-->
-    {% for state_volcano in state_volcanoes%}
-    <tr><td>{{state_volcano.namev}}</td>
-        <td>{{state_volcano.date_state}}</td>
-        <td>{{state_volcano.thermal_anomaly}}</td>
-        <td>{{state_volcano.number_events}}</td>
-        <td>{{state_volcano.max_pgd_height}}</td>
-        <td>{{state_volcano.observ_ash_emissions}}</td>
-        <td>{{state_volcano.hazard_code}}</td>
-    </tr>
-    {% endfor %}
-</table>
+
 {% endblock %}
