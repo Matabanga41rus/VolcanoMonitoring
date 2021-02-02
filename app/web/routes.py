@@ -47,8 +47,43 @@ def add():
     eventTypeList = [(tp.typeId, tp.type) for tp in EventType.query.all()]
 
     seisFormAdd = SeismicObservationForm()
-    if(seisFormAdd.validate_on_submit()):
-        seism = SeismicObservationForm(
+    seisFormAdd.volcanoId.choices = volcanoList
+    seisFormAdd.seisobsStationId.choices = stationList
+    seisFormAdd.seisobsEventTypeId.choices = eventTypeList
+
+    if seisFormAdd.validate_on_submit():
+        observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=todayDate.date(), obsVolcanoId=seisFormAdd.volcanoId.data).first()
+
+        if observation is None:
+            obs = Observation(obsDate=todayDate.date(),
+                              obsVolcanoId=seisFormAdd.volcanoId.data,
+                              obsOperatorId=opId)
+            try:
+                db.session.add(obs)
+                db.session.commit()
+                observation = obs
+            except:
+                print('error database')
+
+        seisObs = SeismicObservation(
+            seisobsObservationId=observation.obsId,
+            seisobsStationId=seisFormAdd.seisobsStationId.data,
+            seisobsInstrumentId=None,
+            seisobsOperatorId=opId,
+            seisobsStartTime=todayDate,
+            seisobsEndTime=todayDate,
+            seisobsPeriodStartTime=todayDate,
+            seisobsPeriodEndTime=todayDate,
+            seisobsHypocenterId=None,
+            seisobsEventCount=seisFormAdd.seisobsEventCount.data,
+            seisobsWeak=seisFormAdd.seisobsWeak.data,
+            seisobsEventTypeId=seisFormAdd.seisobsEventTypeId.data,
+            seisobsAvgAT=seisFormAdd.seisobsAvgAT.data,
+            seisobsMaxAT=seisFormAdd.seisobsMaxAT.data,
+            seisobsEnergyClass=seisFormAdd.seisobsEnergyClass.data,
+            seisobsDuration=seisFormAdd.seisobsDuration.data,
+            seisobsDateSave=todayDate
+
         )
 
 
