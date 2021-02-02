@@ -6,15 +6,25 @@
 </head>
 <body>
 <div>
-    <a href="{{ url_for('index') }}">
-        <h3>Мониторинг активности вулканов:</h3>
-    </a>
+    <div>
+        <a href="{{ url_for('index') }}">
+            <h3>Мониторинг активности вулканов</h3>
+        </a>
+        {%if not current_user.is_anonymous%}
+        <h4>Оператор: {{current_user.opSurname}}</h4>
+        {%endif%}
+    </div>
     <a href="{{ url_for('index') }}"> &nbsp;Оперативная информация&nbsp;</a>
     <a href="{{ url_for('index') }}"> &nbsp;Настраиваемая выборка&nbsp;</a>
     <a href="{{ url_for('index') }}"> &nbsp;Фото/видео наблюдения&nbsp;</a>
     <a href="{{ url_for('index') }}"> &nbsp;Сводная таблица&nbsp;</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Добавить&nbsp;</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Редактировать</a>
+    {%if current_user.is_anonymous%}
+    <a href="{{ url_for('login') }}"> &nbsp;Вход</a>
+    {%else%}
+    <a href="{{ url_for('add') }}"> &nbsp;Добавить&nbsp;</a>
+    <a href="{{ url_for('index') }}"> &nbsp;Редактировать&nbsp;</a>
+    <a href="{{ url_for('logout') }}"> &nbsp;Выйти</a>
+    {%endif%}
 </div>
 {% block content %}{% endblock %}
 </body>
