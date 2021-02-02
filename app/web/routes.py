@@ -15,9 +15,30 @@ def index():
 
     return render_template('index.html')
 
-@app.route('/add')
-def index():
-    obsFormAdd = ObservationForm()
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    loginForm = LoginForm()
+    if loginForm.validate_on_submit():
+        operator = Operator.query.filter_by(opSurname=loginForm.opSurname.data).first()
+        if operator is None or not operator.checkPassword(loginForm.opPassword.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(operator)
+        return redirect(url_for('index'))
+    return render_template('login.html', title='Sign In', loginForm=loginForm)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/add', methods=['GET','POST'])
+def add():
+    todayDate = datetime.now()
+    opId = current_user.opId
 
 
     seisFormAdd = SeismicObservationForm()
