@@ -40,6 +40,11 @@ def add():
     todayDate = datetime.now()
     opId = current_user.opId
 
+    volcanoAll = Volcano.query.all()
+
+    volcanoList = [(volc.volcId, volc.volcName) for volc in volcanoAll]
+    stationList = [(st.stId, st.stName) for st in Station.query.all()]
+    eventTypeList = [(tp.typeId, tp.type) for tp in EventType.query.all()]
 
     seisFormAdd = SeismicObservationForm()
     if(seisFormAdd.validate_on_submit()):
