@@ -85,6 +85,11 @@ def add():
             seisobsDateSave=todayDate
 
         )
+        try:
+            db.session.add(seisObs)
+            db.session.commit()
+        except:
+            print('error database')
 
 
-    return render_template('add.html')
+    return render_template('add.html', form=seisFormAdd, date=todayDate.date())
