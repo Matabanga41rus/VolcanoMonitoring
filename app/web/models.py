@@ -113,6 +113,12 @@ class Operator(db.Model, UserMixin):
 def load_user(id):
     return Operator.query.get(int(id))
 
+@dataclass()
+class VolcanoOperator(db.Model):
+    __tablename__ = "VolcanoOperator"
+    volcopId = Column(Integer, primary_key=True)
+    volcopVolcanoId = Column(Integer, ForeignKey('Volcano.volcId'))
+    volcopOperatorId = Column(Integer, ForeignKey('Operator.opId'))
 
 
 @dataclass()
