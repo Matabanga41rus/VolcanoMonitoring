@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h4>Дата добавления данных: {{date}}</h4>
+<form action="/addobservation" style="width: max-content" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <fieldset>
+        <legend>Add Observation</legend>
+        {{form.obsDate.label}}<br>
+        {{form.obsDate()}}<br>
+        <p>
+        {{form.obsVolcanoId.label}}<br>
+        {{form.obsVolcanoId()}}<br>
+        </p>
+          <p>
+        {{form.obsOperatorId.label}}<br>
+        {{form.obsOperatorId()}}<br>
+        </p>
+        <p>{{ form.sub_add() }}</p>
+
+    </fieldset>
+</form>
+
+{% endblock %}

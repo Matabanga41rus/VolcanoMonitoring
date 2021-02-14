@@ -21,7 +21,8 @@
     {%if current_user.is_anonymous%}
     <a href="{{ url_for('login') }}"> &nbsp;Вход</a>
     {%else%}
-    <a href="{{ url_for('add') }}"> &nbsp;Добавить&nbsp;</a>
+    <a href="{{ url_for('addseismicobs') }}"> &nbsp;Добавить&nbsp;сейсмические данныее</a>
+    <a href="{{ url_for('addobservation') }}"> &nbsp;Назначить ответсвенных операторов</a>
     <a href="{{ url_for('index') }}"> &nbsp;Редактировать&nbsp;</a>
     <a href="{{ url_for('logout') }}"> &nbsp;Выйти</a>
     {%endif%}
