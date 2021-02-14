@@ -2,9 +2,9 @@
 from flask import render_template, redirect, url_for, flash
 from datetime import datetime
 from app import app, db
-from app.web.forms import SeismicObservationForm, LoginForm
+from app.web.forms import SeismicObservationForm, LoginForm, ObservationForm, VideoObservationForm
 from flask_login import current_user, login_user, logout_user
-from app.web.models import SeismicObservation, EventType, Station, Observation, Operator, Volcano
+from app.web.models import VideoObservation, NoteVideoObs,SeismicObservation, EventType, Station, Observation, Operator, Volcano, VolcanoOperator
 
 
 @app.route('/')
@@ -16,7 +16,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -30,19 +30,72 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', loginForm=loginForm)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
-@app.route('/add', methods=['GET','POST'])
-def add():
+
+@app.route('/addobservation', methods=['GET', 'POST'])
+def addobservation():
+    todayDate = datetime.now()
+    operatorList = [(op.opId, op.opSurname) for op in Operator.query.all()]
+    volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
+
+    obsFormAdd = ObservationForm()
+    obsFormAdd.obsOperatorId.choices = operatorList
+    obsFormAdd.obsVolcanoId.choices = volcanoList
+
+    if obsFormAdd.validate_on_submit():
+        observation = Observation.query.filter_by(obsOperatorId=obsFormAdd.obsOperatorId.data,
+                                                  obsDate=todayDate.date(),
+                                                  obsVolcanoId=obsFormAdd.obsVolcanoId.data).first()
+        if observation is None:
+            obs = Observation(obsDate=todayDate.date(),
+                              obsVolcanoId=obsFormAdd.obsVolcanoId.data,
+                              obsOperatorId=obsFormAdd.obsOperatorId.data,
+                              obsCreatedBy="MainOperator",
+                              obsDateSave = todayDate)
+            try:
+                db.session.add(obs)
+                db.session.commit()
+            except:
+                print('error database')
+
+    return render_template('addobservation.html', form=obsFormAdd, date=todayDate.date())
+
+@app.route('/addvideoobs', methods=['GET', 'POST'])
+def addvideoobs():
     todayDate = datetime.now()
     opId = current_user.opId
 
-    volcanoAll = Volcano.query.all()
+    volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
+    vobsAddForm = VideoObservationForm()
+    vobsAddForm.volcanoId.choices = volcanoList
 
-    volcanoList = [(volc.volcId, volc.volcName) for volc in volcanoAll]
+    if vobsAddForm.validate_on_submit():
+        global obsId
+        if not Observation.is_check_data_added_today(opId=opId, date=todayDate, volcId=vobsAddForm.volcanoId.data):
+            Observation.added_observation(opId=opId, date=todayDate, createdBy=current_user.opSurname)
+        
+
+    return render_template('addseismicobs.html', form=vobsAddForm, date=todayDate.date())
+
+
+
+
+@app.route('/addseismicobs', methods=['GET', 'POST'])
+def addseismicobs():
+    todayDate = datetime.now()
+    opId = current_user.opId
+
+    volcanoList = []
+    volcop = VolcanoOperator.query.filter_by(volcopOperatorId=opId)
+    for vp in volcop:
+        volcano = Volcano.query.get(vp.volcopVolcanoId)
+        volcanoList.append((volcano.volcId, volcano.volcName))
+
     stationList = [(st.stId, st.stName) for st in Station.query.all()]
     eventTypeList = [(tp.typeId, tp.type) for tp in EventType.query.all()]
 
@@ -52,16 +105,20 @@ def add():
     seisFormAdd.seisobsEventTypeId.choices = eventTypeList
 
     if seisFormAdd.validate_on_submit():
-        observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=todayDate.date(), obsVolcanoId=seisFormAdd.volcanoId.data).first()
+        observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=todayDate.date(),
+                                                  obsVolcanoId=seisFormAdd.volcanoId.data).first()
 
         if observation is None:
             obs = Observation(obsDate=todayDate.date(),
                               obsVolcanoId=seisFormAdd.volcanoId.data,
-                              obsOperatorId=opId)
+                              obsOperatorId=opId,
+                              obsCreatedBy="automatic",
+                              obsDateSave = todayDate)
             try:
+
                 db.session.add(obs)
                 db.session.commit()
-                observation = obs
+                observation = obs  # для дальнейшего заполнения seisobs
             except:
                 print('error database')
 
@@ -91,5 +148,4 @@ def add():
         except:
             print('error database')
 
-
-    return render_template('add.html', form=seisFormAdd, date=todayDate.date())
+    return render_template('addseismicobs.html', form=seisFormAdd, date=todayDate.date())
