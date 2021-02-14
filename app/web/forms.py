@@ -7,6 +7,20 @@ class LoginForm(FlaskForm):
     opPassword = StringField('Пароль')
     login = SubmitField('Войти')
 
+class ObservationForm(FlaskForm):
+    obsDate = StringField('Дата', validators=[DataRequired()])
+    obsVolcanoId = SelectField('Вулкан')
+    obsOperatorId = SelectField('Оператор')
+    sub_add = SubmitField('Добавить')
+
+class VideoObservationForm(FlaskForm):
+    volcanoId = SelectField('Вулкан')
+    vobsHeightDischarge = FloatField('Высота пебловых выбросов')
+    nvoNote = StringField('Примечание')
+    sub_add = SubmitField('Добавить')
+
+
+
 class SeismicObservationForm(FlaskForm):
     volcanoId = SelectField('Вулкан')
     seisobsStationId = SelectField('Станция')
