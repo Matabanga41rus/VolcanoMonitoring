@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import TimeField, SelectField, BooleanField, DateTimeField, DateField, SubmitField, StringField, IntegerField, SubmitField, FloatField, DateField
+from wtforms import TimeField, FileField, SelectField, BooleanField, DateTimeField, DateField, SubmitField, StringField, IntegerField, SubmitField, FloatField, DateField
 from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
@@ -15,8 +15,16 @@ class ObservationForm(FlaskForm):
 
 class VideoObservationForm(FlaskForm):
     volcanoId = SelectField('Вулкан')
+    vobsFilePath = StringField('Путь к изображению')
     vobsHeightDischarge = FloatField('Высота пебловых выбросов')
     nvoNote = StringField('Примечание')
+    sub_add = SubmitField('Добавить')
+
+class SatelliteObservationForm(FlaskForm):
+    volcanoId = SelectField('Вулкан')
+    satobsPixels = IntegerField('Количество пикселей')
+    satobsTmax = FloatField('Максимальная  температура фона(Tmax)')
+    satobsTfon = FloatField('Средняя температура фона(Tfon)')
     sub_add = SubmitField('Добавить')
 
 
