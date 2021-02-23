@@ -179,6 +179,12 @@ class Observation(db.Model):
         except:
             print('error database')
 
+    @staticmethod
+    def get_id(opId, date, volcId):
+        observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=date,
+                                                  obsVolcanoId=volcId).first()
+        return observation.obsId
+
 
 @dataclass()
 class VideoObservation(db.Model):
