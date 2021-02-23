@@ -64,13 +64,41 @@ def addvideoobs():
     vobsAddForm.volcanoId.choices = volcanoList
 
     if vobsAddForm.validate_on_submit():
-        global obsId
-        if not Observation.is_check_data_added_today(opId=opId, date=todayDate, volcId=vobsAddForm.volcanoId.data):
-            Observation.added_observation(opId=opId, date=todayDate, createdBy=current_user.opSurname)
-        
+        if not Observation.is_check(opId=opId, date=todayDate.date(), volcId=vobsAddForm.volcanoId.data):
+            Observation.add(opId=opId,
+                            date=todayDate.date(),
+                            volcId=vobsAddForm.obsVolcanoId.data,
+                            createdBy=current_user.opSurname)
 
-    return render_template('addseismicobs.html', form=vobsAddForm, date=todayDate.date())
+    return render_template('addvideoobs.html', form=vobsAddForm, date=todayDate.date())
 
+@app.route('/addsatelliteobs', methods=['GET', 'POST'])
+def addsatelliteobs():
+    todayDate = datetime.now()
+    opId = current_user.opId
+    satobsAddForm = SatelliteObservationForm()
+
+    volcanoList = []
+    volcop = VolcanoOperator.query.filter_by(volcopOperatorId=opId)
+    for vp in volcop:
+        volcano = Volcano.query.get(vp.volcopVolcanoId)
+        volcanoList.append((volcano.volcId, volcano.volcName))
+
+    satobsAddForm.volcanoId.choices = volcanoList
+
+    if satobsAddForm.validate_on_submit():
+        volcId = satobsAddForm.volcanoId.data
+        if not Observation.is_check(opId=opId, date=todayDate.date(), volcId=volcId):
+            Observation.add(opId=opId, date=todayDate.date(), volcId=volcId, createdBy='automatic')
+
+        obsId = Observation.get_id(opId=opId,date=todayDate.date(),volcId=volcId)
+        SatelliteObservation.add(obsId=obsId,
+                                 opId=opId,
+                                 pixels=satobsAddForm.satobsPixels.data,
+                                 Tmax=satobsAddForm.satobsTfon.data,
+                                 Tfon=satobsAddForm.satobsTfon.data)
+
+    return render_template('addsatelliteobs.html', form=satobsAddForm, date=todayDate.date())
 
 
 
