@@ -85,6 +85,30 @@ class NoteVideoObs(db.Model):
     nvoOperatorId = Column(Integer, ForeignKey('Operator.opId'))
     nvoDateSave = Column(DATE)
 
+    @staticmethod
+    def add(note, relevance, opId):
+        nvo = NoteVideoObs(
+            nvoNote=note,
+            nvoRelevanceNote=relevance,
+            nvoOperatorId=opId,
+            nvoDateSave=datetime.now()
+        )
+        try:
+            db.session.add(nvo)
+            db.session.commit()
+        except:
+            print('error database')
+
+    @staticmethod
+    def get_id(note, relevance, opId):
+        nvo = NoteVideoObs.query.filter_by(
+            nvoNote=note,
+            nvoRelevanceNote=relevance,
+            nvoOperatorId=opId
+        )
+
+        return nvo.nvoId
+
 
 @dataclass()
 class Camera(db.Model):
