@@ -7,24 +7,26 @@
 <body>
 <div>
     <div>
-        <a href="{{ url_for('index') }}">
+        <a style="text-decoration: none;color:black" href="{{ url_for('index') }}">
             <h3>Мониторинг активности вулканов</h3>
         </a>
         {%if not current_user.is_anonymous%}
         <h4>Оператор: {{current_user.opSurname}}</h4>
         {%endif%}
     </div>
-    <a href="{{ url_for('index') }}"> &nbsp;Оперативная информация&nbsp;</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Настраиваемая выборка&nbsp;</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Фото/видео наблюдения&nbsp;</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Сводная таблица&nbsp;</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('index') }}"> &nbsp;Оперативная информация&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('index') }}"> &nbsp;Настраиваемая выборка&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('index') }}"> &nbsp;Фото/видео наблюдения&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('index') }}"> &nbsp;Сводная таблица&nbsp;|</a>
     {%if current_user.is_anonymous%}
-    <a href="{{ url_for('login') }}"> &nbsp;Вход</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('login') }}"> &nbsp;Вход</a>
     {%else%}
-    <a href="{{ url_for('addseismicobs') }}"> &nbsp;Добавить&nbsp;сейсмические данныее</a>
-    <a href="{{ url_for('addobservation') }}"> &nbsp;Назначить ответсвенных операторов</a>
-    <a href="{{ url_for('index') }}"> &nbsp;Редактировать&nbsp;</a>
-    <a href="{{ url_for('logout') }}"> &nbsp;Выйти</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('addseismicobs') }}"> &nbsp;Добавить&nbsp;сейсмические данные&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('addobservation') }}"> &nbsp;Назначить ответсвенных операторов&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('addsatelliteobs') }}"> &nbsp; Добавить спутниковые данные&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('addvideoobs') }}"> &nbsp;Добавить фото\видео данные&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('index') }}"> &nbsp;Редактировать&nbsp;|</a>
+    <a style="text-decoration: none;color:black" href="{{ url_for('logout') }}"> &nbsp;Выйти</a>
     {%endif%}
 </div>
 {% block content %}{% endblock %}
