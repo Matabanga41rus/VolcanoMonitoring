@@ -159,7 +159,7 @@ class Observation(db.Model):
     def is_check(opId, date, volcId):
         obs = Observation()
 
-        if obs.query.filter_by(obsOpId=opId, obsDate=date, obsVolcanoId=volcId).first() is None:
+        if obs.query.filter_by(obsOperatorId=opId, obsDate=date, obsVolcanoId=volcId).first() is None:
             return False
         else:
             return True
