@@ -175,7 +175,7 @@ class Observation(db.Model):
         try:
             db.session.add(obs)
             db.session.commit()
-            observation = obs  # для дальнейшего заполнения seisobs
+
         except:
             print('error database')
 
@@ -192,6 +192,7 @@ class VideoObservation(db.Model):
     vobsId = Column(Integer, primary_key=True)
     vobsObservationId = Column(Integer, ForeignKey(''))
     vobsHeightDischarge = Column(SMALLINT)
+    vobsFilePath = Column(String)
     vobsNvoId = Column(Integer, ForeignKey('NoteVideoObs,nvoId'))
     vobsCmId = Column(Integer, ForeignKey('Camera.cmId'))
     vobsOperatorId = Column(Integer, ForeignKey('Operator.opId'))
