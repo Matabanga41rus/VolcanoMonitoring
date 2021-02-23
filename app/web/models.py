@@ -197,6 +197,24 @@ class VideoObservation(db.Model):
     vobsOperatorId = Column(Integer, ForeignKey('Operator.opId'))
     vobsDateSave = Column(DATE)
 
+    @staticmethod
+    def add(obsId, heightDischarge, filePath, nvoId, cmId, opId):
+        vobs = VideoObservation(
+            vobsObservationId=obsId,
+            vobsHeightDischarge=heightDischarge,
+            vobsFilePath=filePath,
+            vobsNvoId=nvoId,
+            vobsCmId= cmId,
+            vobsOperatorId=opId,
+            vobsDateSave= datetime.now()
+        )
+
+        try:
+            db.session.add(vobs)
+            db.session.commit()
+        except:
+            print('error database')
+
 
 @dataclass()
 class SatelliteObservation(db.Model):
