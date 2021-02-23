@@ -1,0 +1,28 @@
+<!{% extends "base.html" %}
+
+{% block content %}
+<h4>Дата добавления данных: {{date}}</h4>
+<form action="/addvideoobs" style="width: max-content" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <fieldset>
+        <legend>Add Video Observation</legend>
+        {{form.volcanoId.label}}<br>
+        {{form.volcanoId()}}<br>
+        <p>
+        {{form.vobsImage.label}}<br>
+        {{form.vobsImage()}}<br>
+        <p>
+        {{form.vobsHeightDischarge.label}}<br>
+        {{form.vobsHeightDischarge()}}<br>
+        </p>
+          <p>
+        {{form.nvoNote.label}}<br>
+        {{form.nvoNote()}}<br>
+        </p>
+        <p>{{ form.sub_add() }}</p>
+
+    </fieldset>
+</form>
+
+{% endblock %}
