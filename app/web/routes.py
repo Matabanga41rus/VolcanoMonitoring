@@ -2,17 +2,14 @@
 from flask import render_template, redirect, url_for, flash
 from datetime import datetime
 from app import app, db
-from app.web.forms import SeismicObservationForm, LoginForm, ObservationForm, VideoObservationForm
+from app.web.forms import SeismicObservationForm, LoginForm, ObservationForm, VideoObservationForm, SatelliteObservationForm
 from flask_login import current_user, login_user, logout_user
-from app.web.models import VideoObservation, NoteVideoObs,SeismicObservation, EventType, Station, Observation, Operator, Volcano, VolcanoOperator
+from app.web.models import SatelliteObservation, VideoObservation, NoteVideoObs,SeismicObservation, EventType, Station, Observation, Operator, Volcano, VolcanoOperator
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    if current_user.is_authenticated:
-        return render_template('index.html')
-
     return render_template('index.html')
 
 
@@ -43,27 +40,18 @@ def addobservation():
     operatorList = [(op.opId, op.opSurname) for op in Operator.query.all()]
     volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
 
-    obsFormAdd = ObservationForm()
-    obsFormAdd.obsOperatorId.choices = operatorList
-    obsFormAdd.obsVolcanoId.choices = volcanoList
+    obsAddForm = ObservationForm()
+    obsAddForm.obsOperatorId.choices = operatorList
+    obsAddForm.obsVolcanoId.choices = volcanoList
 
-    if obsFormAdd.validate_on_submit():
-        observation = Observation.query.filter_by(obsOperatorId=obsFormAdd.obsOperatorId.data,
-                                                  obsDate=todayDate.date(),
-                                                  obsVolcanoId=obsFormAdd.obsVolcanoId.data).first()
-        if observation is None:
-            obs = Observation(obsDate=todayDate.date(),
-                              obsVolcanoId=obsFormAdd.obsVolcanoId.data,
-                              obsOperatorId=obsFormAdd.obsOperatorId.data,
-                              obsCreatedBy="MainOperator",
-                              obsDateSave = todayDate)
-            try:
-                db.session.add(obs)
-                db.session.commit()
-            except:
-                print('error database')
+    if obsAddForm.validate_on_submit():
+        if not Observation.is_check(opId=obsAddForm.obsOperatorId.data, date=todayDate.date, volcId=obsAddForm.obsVolcanoId.data):
+            Observation.add(opId=obsAddForm.obsOperatorId.data,
+                            date=todayDate.date(),
+                            volcId=obsAddForm.obsVolcanoId.data,
+                            createdBy=current_user.opSurname)
 
-    return render_template('addobservation.html', form=obsFormAdd, date=todayDate.date())
+    return render_template('addobservation.html', form=obsAddForm, date=todayDate.date())
 
 @app.route('/addvideoobs', methods=['GET', 'POST'])
 def addvideoobs():
@@ -71,6 +59,7 @@ def addvideoobs():
     opId = current_user.opId
 
     volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
+
     vobsAddForm = VideoObservationForm()
     vobsAddForm.volcanoId.choices = volcanoList
 
