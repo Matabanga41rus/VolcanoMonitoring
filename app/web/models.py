@@ -220,11 +220,28 @@ class VideoObservation(db.Model):
 class SatelliteObservation(db.Model):
     __tablename__ = "SatelliteObservation"
     satobsId = Column(Integer, primary_key=True)
+    satobsOperatorId = Column(Integer, ForeignKey('Operator.opId'))
     satobsObservationId = Column(Integer, ForeignKey('Observation.obsId'))
     satobsPixels = Column(SMALLINT)
     satobsTmax = Column(SMALLINT)
     satobsTfon = Column(SMALLINT)
-    satobsOperatorId = Column(Integer, ForeignKey('Operator.opId'))
+
+    @staticmethod
+    def add(obsId, opId, pixels, Tmax, Tfon):
+        satobs = SatelliteObservation(
+            satobsObservationId=obsId,
+            satobsOperatorId=opId,
+            satobsPixels=pixels,
+            satobsTmax=Tmax,
+            satobsTfon=Tfon
+        )
+
+        try:
+            db.session.add(satobs)
+            db.session.commit()
+        except:
+            print('error database')
+
 
 
 @dataclass()
