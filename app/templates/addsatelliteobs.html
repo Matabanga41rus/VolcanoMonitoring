@@ -1,0 +1,28 @@
+<!{% extends "base.html" %}
+
+{% block content %}
+<h4>Дата добавления данных: {{date}}</h4>
+<form action="/addsatelliteobs" style="width: max-content" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <fieldset>
+        <legend>Add Satellite Observation</legend>
+        {{form.volcanoId.label}}<br>
+        {{form.volcanoId()}}<br>
+        <p>
+        {{form.satobsPixels.label}}<br>
+        {{form.satobsPixels()}}<br>
+        <p>
+        {{form.satobsTmax.label}}<br>
+        {{form.satobsTmax()}}<br>
+        </p>
+          <p>
+        {{form.satobsTfon.label}}<br>
+        {{form.satobsTfon()}}<br>
+        </p>
+        <p>{{ form.sub_add() }}</p>
+
+    </fieldset>
+</form>
+
+{% endblock %}
