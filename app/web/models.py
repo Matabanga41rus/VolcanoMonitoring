@@ -131,7 +131,8 @@ class Observation(db.Model):
     obsCreatedBy = Column(String)
     obsDateSave = Column(DATE)
 
-    def is_check_data_added_today(self, opId, date, volcId):
+    @staticmethod
+    def is_check(opId, date, volcId):
         obs = Observation()
 
         if obs.query.filter_by(obsOpId=opId, obsDate=date, obsVolcanoId=volcId).first() is None:
@@ -139,7 +140,8 @@ class Observation(db.Model):
         else:
             return True
 
-    def added_observation(self, opId, date, volcId, createdBy):
+    @staticmethod
+    def add (opId, date, volcId, createdBy):
         dateServer = datetime.now()
         obs = Observation(obsDate=date,
                           obsVolcanoId=volcId,
