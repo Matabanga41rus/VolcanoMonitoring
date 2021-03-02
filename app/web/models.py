@@ -233,7 +233,6 @@ class VideoObservation(db.Model):
     vobsObservationId = Column(Integer, ForeignKey(''))
     vobsHeightDischarge = Column(SMALLINT)
     vobsFilePath = Column(String)
-    vobsNvoId = Column(Integer, ForeignKey('NoteVideoObs,nvoId'))
     vobsCmId = Column(Integer, ForeignKey('Camera.cmId'))
     vobsOperatorId = Column(Integer, ForeignKey('Operator.opId'))
     vobsDateSave = Column(DATE)
