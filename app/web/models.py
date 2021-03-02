@@ -17,6 +17,21 @@ class Volcano(db.Model):
     volcShortNameLat = Column(String)
     volcType = Column(SMALLINT)
 
+    @staticmethod
+    def get_list_tuples_all_id_and_name():
+        list = []
+        for vl in Volcano.query.all():
+            list.append((vl.volcId, vl.volcName))
+        return list
+
+    @staticmethod
+    def get_list_tuples_id_and_name(listId):
+        list = []
+        for id in listId:
+            vl = Volcano.query.get(id)
+            list.append((vl.volcId, vl.volcName))
+        return list
+
 
 @dataclass()
 class VolcanoStation(db.Model):
@@ -39,6 +54,13 @@ class Station(db.Model):
     stInternationalCodeRegistered = Column(DATE)
     stComment = Column(String)
     stState = Column(Integer)
+
+    @staticmethod
+    def get_list_tuples_all_id_and_name():
+        list = []
+        for st in Station.query.all():
+            list.append((st.stId, st.stName))
+        return list
 
 
 @dataclass()
@@ -75,11 +97,19 @@ class EventType(db.Model):
     typeId = Column(Integer, primary_key=True)
     type = Column(String)
 
+    @staticmethod
+    def get_list_tuples_all_id_and_name():
+        list = []
+        for tp in EventType.query.all():
+            list.append((tp.typeId, tp.type))
+        return list
+
 
 @dataclass()
 class NoteVideoObs(db.Model):
     __tablename__ = "NoteVideoObs"
     nvoId = Column(Integer, primary_key=True)
+    nvoVideoObsId = Column(Integer, ForeignKey('VideoObservation.vobsId'))
     nvoNote = Column(String)
     nvoRelevanceNote = Column(Boolean)
     nvoOperatorId = Column(Integer, ForeignKey('Operator.opId'))
@@ -123,6 +153,13 @@ class Operator(db.Model, UserMixin):
     opSurname = Column(String)
     opPasswordHash = Column(String)
 
+    @staticmethod
+    def get_list_tuples_all_id_and_surname():
+        list = []
+        for op in Operator.query.all():
+            list.append((op.opId, op.opSurname))
+        return list
+
     def get_id(self):
         return self.opId
 
@@ -143,6 +180,14 @@ class VolcanoOperator(db.Model):
     volcopId = Column(Integer, primary_key=True)
     volcopVolcanoId = Column(Integer, ForeignKey('Volcano.volcId'))
     volcopOperatorId = Column(Integer, ForeignKey('Operator.opId'))
+
+    @staticmethod
+    def get_list_id_volcano(opId):
+        volcop = VolcanoOperator.query.filter_by(volcopOperatorId=opId)
+        listId = []
+        for vp in volcop:
+            listId.append(vp.volcopVolcanoId)
+        return listId
 
 
 @dataclass()
@@ -204,7 +249,6 @@ class VideoObservation(db.Model):
             vobsObservationId=obsId,
             vobsHeightDischarge=heightDischarge,
             vobsFilePath=filePath,
-            vobsNvoId=nvoId,
             vobsCmId= cmId,
             vobsOperatorId=opId,
             vobsDateSave= datetime.now()
