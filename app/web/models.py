@@ -310,3 +310,31 @@ class SeismicObservation(db.Model):
     seisobsDuration = Column(SMALLINT)
     seisobsEnergyClass = Column(REAL)
     seisobsDateSave = Column(DATE)
+
+    @staticmethod
+    def add(obsId, stId, instId, opId, startTime, endTime, periodStartTime, periodEndTime,
+            hypId, eventCount, weak, eventTypeId,  avgAT, maxAT, duration, energyClass, datesave):
+        seisObs = SeismicObservation(
+            seisobsObservationId=obsId,
+            seisobsStationId=stId,
+            seisobsInstrumentId=instId,
+            seisobsOperatorId=opId,
+            seisobsStartTime=startTime,
+            seisobsEndTime=endTime,
+            seisobsPeriodStartTime=periodStartTime,
+            seisobsPeriodEndTime=periodEndTime,
+            seisobsHypocenterId=hypId,
+            seisobsEventCount=eventCount,
+            seisobsWeak=weak,
+            seisobsEventTypeId=eventTypeId,
+            seisobsAvgAT=avgAT,
+            seisobsMaxAT=maxAT,
+            seisobsEnergyClass=energyClass,
+            seisobsDuration=duration,
+            seisobsDateSave=datesave
+        )
+        try:
+            db.session.add(seisObs)
+            db.session.commit()
+        except:
+            print('error database')
