@@ -37,8 +37,8 @@ def logout():
 @app.route('/observation', methods=['GET', 'POST'])
 def addobservation():
     todayDate = datetime.now()
-    operatorList = [(op.opId, op.opSurname) for op in Operator.query.all()]
-    volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
+    operatorList = Operator.get_list_tuples_all_id_and_surname()
+    volcanoList = Volcano.get_list_tuples_all_id_and_name()
 
     obsAddForm = ObservationForm()
     obsAddForm.obsOperatorId.choices = operatorList
@@ -58,7 +58,8 @@ def addvideoobs():
     todayDate = datetime.now()
     opId = current_user.opId
 
-    volcanoList = [(volc.volcId, volc.volcName) for volc in Volcano.query.all()]
+    listIdVolcano = VolcanoOperator.get_list_id_volcano(opId)
+    volcanoList = Volcano.get_list_tuples_id_and_name(listIdVolcano)
 
     vobsAddForm = VideoObservationForm()
     vobsAddForm.volcanoId.choices = volcanoList
@@ -78,11 +79,8 @@ def addsatelliteobs():
     opId = current_user.opId
     satobsAddForm = SatelliteObservationForm()
 
-    volcanoList = []
-    volcop = VolcanoOperator.query.filter_by(volcopOperatorId=opId)
-    for vp in volcop:
-        volcano = Volcano.query.get(vp.volcopVolcanoId)
-        volcanoList.append((volcano.volcId, volcano.volcName))
+    listIdVolcano = VolcanoOperator.get_list_id_volcano(opId)
+    volcanoList = Volcano.get_list_tuples_id_and_name(listIdVolcano)
 
     satobsAddForm.volcanoId.choices = volcanoList
 
@@ -104,22 +102,14 @@ def addsatelliteobs():
 
 @app.route('/observation/seismic', methods=['GET', 'POST'])
 def addseismicobs():
-    todayDate = datetime.now()
+    dateTimeServer = datetime.now()
     opId = current_user.opId
 
-    volcanoList = []
-    volcop = VolcanoOperator.query.filter_by(volcopOperatorId=opId)
-    for vp in volcop:
-        volcano = Volcano.query.get(vp.volcopVolcanoId)
-        volcanoList.append((volcano.volcId, volcano.volcName))
+    listIdVolcano = VolcanoOperator.get_list_id_volcano(opId)
 
-    stationList = [(st.stId, st.stName) for st in Station.query.all()]
-    eventTypeList = [(tp.typeId, tp.type) for tp in EventType.query.all()]
-
-    seisFormAdd = SeismicObservationForm()
-    seisFormAdd.volcanoId.choices = volcanoList
-    seisFormAdd.seisobsStationId.choices = stationList
-    seisFormAdd.seisobsEventTypeId.choices = eventTypeList
+    volcanoList = Volcano.get_list_tuples_id_and_name(listIdVolcano)
+    stationList = Station.get_list_tuples_all_id_and_name()
+    eventTypeList = EventType.get_list_tuples_all_id_and_name()
 
     if seisFormAdd.validate_on_submit():
         observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=todayDate.date(),
