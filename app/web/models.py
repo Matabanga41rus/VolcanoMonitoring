@@ -202,12 +202,7 @@ class Observation(db.Model):
 
     @staticmethod
     def is_check(opId, date, volcId):
-        obs = Observation()
-
-        if obs.query.filter_by(obsOperatorId=opId, obsDate=date, obsVolcanoId=volcId).first() is None:
-            return False
-        else:
-            return True
+        return Observation.query.filter_by(obsOperatorId=opId, obsDate=date, obsVolcanoId=volcId).first() is None
 
     @staticmethod
     def add (opId, date, volcId, createdBy):
