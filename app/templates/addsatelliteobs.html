@@ -2,7 +2,7 @@
 
 {% block content %}
 <h4>Дата добавления данных: {{date}}</h4>
-<form action="/addsatelliteobs" style="width: max-content" method="POST">
+<form action="/observation/satellite" style="width: max-content" method="POST">
     {{ form.hidden_tag() }}
     {{ form.csrf_token }}
     <fieldset>
