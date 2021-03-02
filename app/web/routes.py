@@ -111,48 +111,34 @@ def addseismicobs():
     stationList = Station.get_list_tuples_all_id_and_name()
     eventTypeList = EventType.get_list_tuples_all_id_and_name()
 
-    if seisFormAdd.validate_on_submit():
-        observation = Observation.query.filter_by(obsOperatorId=opId, obsDate=todayDate.date(),
-                                                  obsVolcanoId=seisFormAdd.volcanoId.data).first()
+    seisAddForm = SeismicObservationForm()
+    seisAddForm.volcanoId.choices = volcanoList
+    seisAddForm.seisobsStationId.choices = stationList
+    seisAddForm.seisobsEventTypeId.choices = eventTypeList
 
-        if observation is None:
-            obs = Observation(obsDate=todayDate.date(),
-                              obsVolcanoId=seisFormAdd.volcanoId.data,
-                              obsOperatorId=opId,
-                              obsCreatedBy="automatic",
-                              obsDateSave = todayDate)
-            try:
+    if seisAddForm.validate_on_submit():
+        volcId = seisAddForm.volcanoId.data
+        if not Observation.is_check(opId=opId, date=dateTimeServer.date(), volcId=volcId):
+            Observation.add(opId=opId, date=dateTimeServer.date(), volcId=volcId, createdBy='automatic')
 
-                db.session.add(obs)
-                db.session.commit()
-                observation = obs  # для дальнейшего заполнения seisobs
-            except:
-                print('error database')
+        obsId = Observation.get_id(opId=opId,date=dateTimeServer.date(), volcId=volcId)
 
-        seisObs = SeismicObservation(
-            seisobsObservationId=observation.obsId,
-            seisobsStationId=seisFormAdd.seisobsStationId.data,
-            seisobsInstrumentId=None,
-            seisobsOperatorId=opId,
-            seisobsStartTime=todayDate,
-            seisobsEndTime=todayDate,
-            seisobsPeriodStartTime=todayDate,
-            seisobsPeriodEndTime=todayDate,
-            seisobsHypocenterId=None,
-            seisobsEventCount=seisFormAdd.seisobsEventCount.data,
-            seisobsWeak=seisFormAdd.seisobsWeak.data,
-            seisobsEventTypeId=seisFormAdd.seisobsEventTypeId.data,
-            seisobsAvgAT=seisFormAdd.seisobsAvgAT.data,
-            seisobsMaxAT=seisFormAdd.seisobsMaxAT.data,
-            seisobsEnergyClass=seisFormAdd.seisobsEnergyClass.data,
-            seisobsDuration=seisFormAdd.seisobsDuration.data,
-            seisobsDateSave=todayDate
+        SeismicObservation.add(obsId=obsId,
+                               stId=seisAddForm.seisobsStationId.data,
+                               instId=None,
+                               opId=opId,
+                               startTime= dateTimeServer,
+                               endTime=dateTimeServer,
+                               periodStartTime=dateTimeServer,
+                               periodEndTime=dateTimeServer,
+                               hypId=None,
+                               eventCount=seisAddForm.seisobsEventCount.data,
+                               weak=seisAddForm.seisobsWeak.data,
+                               eventTypeId=seisAddForm.seisobsEventTypeId.data,
+                               avgAT=seisAddForm.seisobsAvgAT.data,
+                               maxAT=seisAddForm.seisobsMaxAT.data,
+                               energyClass=seisAddForm.seisobsEnergyClass.data,
+                               duration=seisAddForm.seisobsDuration.data,
+                               datesave=dateTimeServer)
 
-        )
-        try:
-            db.session.add(seisObs)
-            db.session.commit()
-        except:
-            print('error database')
-
-    return render_template('addseismicobs.html', form=seisFormAdd, date=todayDate.date())
+    return render_template('addseismicobs.html', form=seisAddForm, date=dateTimeServer.date())
