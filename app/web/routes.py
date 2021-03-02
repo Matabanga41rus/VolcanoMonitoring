@@ -34,7 +34,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/addobservation', methods=['GET', 'POST'])
+@app.route('/observation', methods=['GET', 'POST'])
 def addobservation():
     todayDate = datetime.now()
     operatorList = [(op.opId, op.opSurname) for op in Operator.query.all()]
@@ -53,7 +53,7 @@ def addobservation():
 
     return render_template('addobservation.html', form=obsAddForm, date=todayDate.date())
 
-@app.route('/addvideoobs', methods=['GET', 'POST'])
+@app.route('/observation/video', methods=['GET', 'POST'])
 def addvideoobs():
     todayDate = datetime.now()
     opId = current_user.opId
@@ -72,7 +72,7 @@ def addvideoobs():
 
     return render_template('addvideoobs.html', form=vobsAddForm, date=todayDate.date())
 
-@app.route('/addsatelliteobs', methods=['GET', 'POST'])
+@app.route('/observation/satellite', methods=['GET', 'POST'])
 def addsatelliteobs():
     todayDate = datetime.now()
     opId = current_user.opId
@@ -102,7 +102,7 @@ def addsatelliteobs():
 
 
 
-@app.route('/addseismicobs', methods=['GET', 'POST'])
+@app.route('/observation/seismic', methods=['GET', 'POST'])
 def addseismicobs():
     todayDate = datetime.now()
     opId = current_user.opId
