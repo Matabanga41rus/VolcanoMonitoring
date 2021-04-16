@@ -33,6 +33,26 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/addhazardcode', methods=['GET', 'POST'])
+def addhazardcode():
+    dateTimeServer = datetime.now()
+    opId = current_user.opId
+    volcanoList = Volcano.get_list_tuples_all_id_and_name()
+    codeList = [(1, 'Зеленый'), (2, 'Жёлтый'), (3, 'красный')]
+
+    hazForm = HazardCodeForm()
+    hazForm.volcanoId.choices = volcanoList
+
+    if hazForm.validate_on_submit():
+        volcId = hazForm.volcanoId.data
+        if not Observation.is_check(opId=opId, date=dateTimeServer.date(), volcId=volcId):
+            Observation.add(opId=opId, date=dateTimeServer.date(), volcId=volcId, createdBy='automatic')
+
+        obsId = Observation.get_id(opId=opId, date=dateTimeServer.date(), volcId=volcId)
+
+
+    return render_template('addhazardcode.html', form=hazForm)
+
 
 @app.route('/observation', methods=['GET', 'POST'])
 def addobservation():
