@@ -24,5 +24,37 @@
 
     </fieldset>
 </form>
+<form action="/observation/satellite" style="width: max-content" method="POST">
+    {{ periodForm.hidden_tag() }}
+    {{ periodForm.csrf_token }}
+    <fieldset>
+        <legend>Set period</legend>
+        <p>
+        {{periodForm.periodStart.label}}<br>
+        {{periodForm.periodStart()}}<br>
+        <p>
+        {{periodForm.periodEnd.label}}<br>
+        {{periodForm.periodEnd()}}<br>
+        </p>
+        <p>{{periodForm.subOut()}}</p>
 
+    </fieldset>
+</form>
+<h3>Спутниковые наблюдения</h3>
+<table>
+    <tr><th>Оператор</th>
+        <th>Дата</th>
+        <th>Колличество пиксилей</th>
+        <th>Максимальная температура</th>
+        <th>Средняя температура</th>
+    </tr>
+    {% for satobs in listSatobs%}
+    <tr><td>{{satobs.Operator.opSurname}}</td>
+        <td>{{satobs.Observation.obsDate}}</td>
+        <td>{{satobs.SatelliteObservation.satobsPixels}}</td>
+        <td>{{satobs.SatelliteObservation.satobsTmax}}</td>
+        <td>{{satobs.SatelliteObservation.satobsTfon}}</td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}
