@@ -61,5 +61,63 @@
 
     </fieldset>
 </form>
+<form action="/observation/seismic" style="width: max-content" method="POST">
+    {{ periodForm.hidden_tag() }}
+    {{ periodForm.csrf_token }}
+    <fieldset>
+        <legend>Set period</legend>
+        <p>
+        {{periodForm.periodStart.label}}<br>
+        {{periodForm.periodStart()}}<br>
+        <p>
+        {{periodForm.periodEnd.label}}<br>
+        {{periodForm.periodEnd()}}<br>
+        </p>
+        <p>{{periodForm.subOut()}}</p>
+
+    </fieldset>
+</form>
+<h3>Сейсмические наблюдения</h3>
+<table>
+    <tr><th>Оператор</th>
+        <th>Дата</th>
+        <th>Вулкан</th>
+        <th>Станция</th>
+        <th>Инструмент</th>
+        <th>Эпицентр</th>
+        <th>Тип события</th>
+        <th>От</th>
+        <th>До</th>
+        <th>Период от</th>
+        <th>Период до</th>
+        <th>Количество событий</th>
+        <th>Слабое событие?</th>
+        <th>Среднее A/T</th>
+        <th>Максимальное A/T</th>
+        <th>Класс</th>
+        <th>Продолжительность</th>
+    </tr>
+    {% for seisobs in listSeisobs%}
+    <tr>
+        <td>{{seisobs.Operator.opSurname}}</td>
+        <td>{{seisobs.Observation.obsDate}}</td>
+        <td>{{seisobs.Volcano.volcName}}</td>
+        <td>{{seisobs.Station.stName}}</td>
+        <td> </td>
+        <td> </td>
+        <td>{{seisobs.EventType.type}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsStartTime}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsEndTime}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsPeriodStartTime}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsPeriodEndTime}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsEventCount}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsWeak}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsAvgAT}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsMaxAT}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsEnergyClass}}</td>
+        <td>{{seisobs.SeismicObservation.seisobsDuration}}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock %}
