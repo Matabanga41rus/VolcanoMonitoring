@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h4>Дата добавления данных: {{date}}</h4>
+<form action="/addobservation" style="width: max-content" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    <fieldset>
+        <legend>Add Hazard code</legend>
+        {{form.volcanoId.label}}<br>
+        {{form.volcanoId()}}<br>
+        <p>
+        {{form.codeObsId.label}}<br>
+        {{form.codeObsId()}}<br>
+        </p>
+          <p>
+        {{form.codeType.label}}<br>
+        {{form.codeType()}}<br>
+        </p>
+        <p>
+            {{ form.sub_add() }}
+        </p>
+
+    </fieldset>
+</form>
+<h3>Спутниковые наблюдения</h3>
+<table>
+    <tr><th>Оператор</th>
+        <th>Дата</th>
+        <th>Вулкан</th>
+        <th>Код опасности</th>
+    </tr>
+    {% for hazardCode in listSatobs%}
+    <tr><td>{{hazardCode.Operator.opSurname}}</td>
+        <td>{{hazardCode.Observation.obsDate}}</td>
+        <td>{{hazardCode.Volcano.volcName}}</td>
+        <td>{{hazardCode.HazardCode.codType}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
