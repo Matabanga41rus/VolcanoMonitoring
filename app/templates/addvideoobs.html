@@ -24,5 +24,43 @@
 
     </fieldset>
 </form>
+<form action="/observation/video" style="width: max-content" method="POST">
+    {{ periodForm.hidden_tag() }}
+    {{ periodForm.csrf_token }}
+    <fieldset>
+        <legend>Set period</legend>
+        <p>
+        {{periodForm.periodStart.label}}<br>
+        {{periodForm.periodStart()}}<br>
+        <p>
+        {{periodForm.periodEnd.label}}<br>
+        {{periodForm.periodEnd()}}<br>
+        </p>
+        <p>{{periodForm.subOut()}}</p>
+
+    </fieldset>
+</form>
+<h3>Фото/Видео наблюдения</h3>
+<table>
+    <tr><th>Оператор</th>
+        <th>Дата</th>
+        <th>Вулкан</th>
+        <th>Высота пепловых выбросов</th>
+        <th>Камера</th>
+        <th>Изображение</th>
+        <th>Примечание</th>
+    </tr>
+    {% for vobs in listVobs%}
+    <tr><td>{{vobs.Operator.opSurname}}</td>
+        <td>{{vobs.Observation.obsDate}}</td>
+        <td>{{vobs.Volcano.volcName}}</td>
+        <td>{{vobs.VideoObservation.vobsHeightDischarge}}</td>
+        <td></td>
+        <td>{{vobs.VideoObservation.vobsFilePath}}</td>
+        <td>{{vobs.NoteVideoObs.nvoNote}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
 
 {% endblock %}
