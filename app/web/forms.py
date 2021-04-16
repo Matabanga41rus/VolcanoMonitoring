@@ -27,8 +27,6 @@ class SatelliteObservationForm(FlaskForm):
     satobsTfon = FloatField('Средняя температура фона(Tfon)')
     sub_add = SubmitField('Добавить')
 
-
-
 class SeismicObservationForm(FlaskForm):
     volcanoId = SelectField('Вулкан')
     seisobsStationId = SelectField('Станция')
@@ -42,7 +40,17 @@ class SeismicObservationForm(FlaskForm):
     seisobsAvgAT = FloatField('Среднее А/Т', validators=[DataRequired()])
     seisobsMaxAT =FloatField('Максимальное А/Т', validators=[DataRequired()])
     seisobsEnergyClass = FloatField('Энергетический класс', validators=[DataRequired()])
-    seisobsDuration = FloatField('Продолжительность')
+    seisobsDuration = FloatField('Продолжительность', validators=None)
     sub_add = SubmitField('Добавить')
 
+class HazardCodeForm(FlaskForm):
+    volcanoId = SelectField('Вулкан')
+    codeObsId = StringField('Дата')
+    codeType = SelectField('код опасности')
 
+
+
+class PeriodForOutDataForm(FlaskForm):
+    periodStart = StringField("С ")
+    periodEnd = StringField("    По ")
+    subOut = SubmitField('Вывести')
