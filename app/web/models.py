@@ -252,6 +252,38 @@ class VideoObservation(db.Model):
         except:
             print('error database')
 
+    @staticmethod
+    def get_id(obsId, heightDischarge, filePath, cmId, opId):
+        vobs = VideoObservation.query.filter_by(vobsObservationId=obsId,
+                                             vobsHeightDischarge=heightDischarge,
+                                             vobsFilePath=filePath,
+                                             vobsCmId=cmId,
+                                             vobsOperatorId=opId).first()
+
+        return vobs.vobsId
+
+    @staticmethod
+    def getListLastVobs(count):
+        listVobs = db.session.query(Observation, Operator, Volcano,VideoObservation, NoteVideoObs). \
+            filter(VideoObservation.vobsObservationId == Observation.obsId). \
+            filter(NoteVideoObs.nvoVideoObsId == VideoObservation.vobsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId).\
+            order_by(db.desc(VideoObservation.vobsId)).limit(count)
+        return listVobs
+
+    @staticmethod
+    def getListVobsForPeriod(periodStart, periodEnd):
+        listVobs = db.session.query(Observation, Volcano, VideoObservation, NoteVideoObs). \
+            filter(VideoObservation.vobsObservationId == Observation.obsId). \
+            filter(NoteVideoObs.nvoVideoObsId == VideoObservation.vobsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId). \
+            filter(Observation.obsDate >= periodStart). \
+            filter(Observation.obsDate <= periodEnd).all()
+
+        return listVobs
+
 
 @dataclass()
 class SatelliteObservation(db.Model):
