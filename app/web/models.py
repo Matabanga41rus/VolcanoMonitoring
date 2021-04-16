@@ -116,8 +116,9 @@ class NoteVideoObs(db.Model):
     nvoDateSave = Column(DATE)
 
     @staticmethod
-    def add(note, relevance, opId):
+    def add(vobsId, note, relevance, opId):
         nvo = NoteVideoObs(
+            nvoVideoObsId=vobsId,
             nvoNote=note,
             nvoRelevanceNote=relevance,
             nvoOperatorId=opId,
@@ -130,12 +131,11 @@ class NoteVideoObs(db.Model):
             print('error database')
 
     @staticmethod
-    def get_id(note, relevance, opId):
-        nvo = NoteVideoObs.query.filter_by(
-            nvoNote=note,
-            nvoRelevanceNote=relevance,
-            nvoOperatorId=opId
-        )
+    def get_id(vobsId, note, relevance, opId):
+        nvo = NoteVideoObs.query.filter_by(nvoVideoObsId=vobsId,
+                                           nvoNote=note,
+                                           nvoRelevanceNote=relevance,
+                                           nvoOperatorId=opId)
 
         return nvo.nvoId
 
@@ -145,7 +145,6 @@ class Camera(db.Model):
     __tablename__ = "Camera"
     cmId = Column(Integer, primary_key=True)
     cmName = Column(String)
-
 
 class Operator(db.Model, UserMixin):
     __tablename__ = 'Operator'
@@ -163,12 +162,11 @@ class Operator(db.Model, UserMixin):
     def get_id(self):
         return self.opId
 
-    def setPassword(self, password):
+    def set_password(self, password):
         self.opPasswordHash = generate_password_hash(password)
 
-    def checkPassword(self, password):
+    def check_password(self, password):
         return check_password_hash(self.opPasswordHash, password)
-
 
 @login.user_loader
 def load_user(id):
@@ -202,7 +200,7 @@ class Observation(db.Model):
 
     @staticmethod
     def is_check(opId, date, volcId):
-        return Observation.query.filter_by(obsOperatorId=opId, obsDate=date, obsVolcanoId=volcId).first() is None
+        return Observation.query.filter_by(obsOperatorId=opId, obsDate=date, obsVolcanoId=volcId).first() is not None
 
     @staticmethod
     def add (opId, date, volcId, createdBy):
@@ -230,7 +228,7 @@ class Observation(db.Model):
 class VideoObservation(db.Model):
     __tablename__ = "VideoObservation"
     vobsId = Column(Integer, primary_key=True)
-    vobsObservationId = Column(Integer, ForeignKey(''))
+    vobsObservationId = Column(Integer, ForeignKey('Observation.obsId'))
     vobsHeightDischarge = Column(SMALLINT)
     vobsFilePath = Column(String)
     vobsCmId = Column(Integer, ForeignKey('Camera.cmId'))
@@ -238,12 +236,12 @@ class VideoObservation(db.Model):
     vobsDateSave = Column(DATE)
 
     @staticmethod
-    def add(obsId, heightDischarge, filePath, nvoId, cmId, opId):
+    def add(obsId, heightDischarge, filePath, cmId, opId):
         vobs = VideoObservation(
             vobsObservationId=obsId,
             vobsHeightDischarge=heightDischarge,
             vobsFilePath=filePath,
-            vobsCmId= cmId,
+            vobsCmId=cmId,
             vobsOperatorId=opId,
             vobsDateSave= datetime.now()
         )
@@ -264,15 +262,18 @@ class SatelliteObservation(db.Model):
     satobsPixels = Column(SMALLINT)
     satobsTmax = Column(SMALLINT)
     satobsTfon = Column(SMALLINT)
+    satobsDateSave = Column(DATE)
 
     @staticmethod
     def add(obsId, opId, pixels, Tmax, Tfon):
+        dateServer = datetime.now()
         satobs = SatelliteObservation(
             satobsObservationId=obsId,
             satobsOperatorId=opId,
             satobsPixels=pixels,
             satobsTmax=Tmax,
-            satobsTfon=Tfon
+            satobsTfon=Tfon,
+            satobsDateSave=dateServer
         )
 
         try:
