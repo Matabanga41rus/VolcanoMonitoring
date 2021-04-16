@@ -314,6 +314,26 @@ class SatelliteObservation(db.Model):
         except:
             print('error database')
 
+    @staticmethod
+    def getListLastSatobs(count):
+        listSatobs = db.session.query(Observation, Volcano, Operator, SatelliteObservation). \
+            filter(SatelliteObservation.satobsObservationId == Observation.obsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId).order_by(db.desc(SatelliteObservation.satobsId)).limit(
+            count)
+
+        return listSatobs
+
+    @staticmethod
+    def getListSatobsForPeriod(periodStart, periodEnd):
+        listSatobs = db.session.query(Observation, Volcano, Operator, SatelliteObservation). \
+            filter(SatelliteObservation.satobsObservationId == Observation.obsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId). \
+            filter(Observation.obsDate >= periodStart). \
+            filter(Observation.obsDate <= periodEnd).all()
+
+        return listSatobs
 
 
 @dataclass()
