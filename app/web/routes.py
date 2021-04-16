@@ -102,7 +102,20 @@ def addsatelliteobs():
 
     satobsAddForm.volcanoId.choices = volcanoList
 
-    if satobsAddForm.validate_on_submit():
+    periodForm = PeriodForOutDataForm()
+
+    count = 10
+
+    listSatobs = SatelliteObservation.getListLastSatobs(count=count)
+
+    if periodForm.subOut.data and periodForm.validate_on_submit():
+        periodStart = periodForm.periodStart.data
+        periodEnd = periodForm.periodEnd.data
+
+        listSatobs = SatelliteObservation.getListSatobsForPeriod(periodStart=periodStart, periodEnd=periodEnd)
+
+
+    if satobsAddForm.sub_add.data and satobsAddForm.validate_on_submit():
         volcId = satobsAddForm.volcanoId.data
         if not Observation.is_check(opId=opId, date=dateTimeServer.date(), volcId=volcId):
             Observation.add(opId=opId, date=dateTimeServer.date(), volcId=volcId, createdBy='automatic')
@@ -114,7 +127,7 @@ def addsatelliteobs():
                                  Tmax=satobsAddForm.satobsTfon.data,
                                  Tfon=satobsAddForm.satobsTfon.data)
 
-    return render_template('addsatelliteobs.html', form=satobsAddForm, date=todayDate.date())
+        listSatobs = SatelliteObservation.getListLastSatobs(count=count)
 
     return render_template('addsatelliteobs.html', listSatobs=listSatobs, periodForm=periodForm, form=satobsAddForm, date=dateTimeServer.date())
 
@@ -134,7 +147,19 @@ def addseismicobs():
     seisAddForm.seisobsStationId.choices = stationList
     seisAddForm.seisobsEventTypeId.choices = eventTypeList
 
-    if seisAddForm.validate_on_submit():
+    periodForm = PeriodForOutDataForm()
+
+    count = 10
+
+    listSeisobs = SeismicObservation.get_list_last_sesmicobs(count=count)
+
+    if periodForm.subOut.data and periodForm.validate_on_submit():
+        periodStart = periodForm.periodStart.data
+        periodEnd = periodForm.periodEnd.data
+
+        listSeisobs = SeismicObservation.get_list_satobs_for_period(periodStart=periodStart, periodEnd=periodEnd)
+    # решить вопрос с валидацией при пустых полях
+    if seisAddForm.sub_add.data and seisAddForm.validate_on_submit():
         volcId = seisAddForm.volcanoId.data
         if not Observation.is_check(opId=opId, date=dateTimeServer.date(), volcId=volcId):
             Observation.add(opId=opId, date=dateTimeServer.date(), volcId=volcId, createdBy='automatic')
@@ -159,4 +184,8 @@ def addseismicobs():
                                duration=seisAddForm.seisobsDuration.data,
                                datesave=dateTimeServer)
 
-    return render_template('addseismicobs.html', form=seisAddForm, date=dateTimeServer.date())
+        listSeisobs = SeismicObservation.get_list_last_sesmicobs(count=count)
+
+    print(seisAddForm.errors)
+
+    return render_template('addseismicobs.html', listSeisobs=listSeisobs, periodForm=periodForm, form=seisAddForm, date=dateTimeServer.date())
