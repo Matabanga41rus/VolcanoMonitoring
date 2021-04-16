@@ -385,3 +385,62 @@ class SeismicObservation(db.Model):
             db.session.commit()
         except:
             print('error database')
+
+    @staticmethod
+    def get_list_last_sesmicobs(count):
+        listSeisobs = db.session.query(Observation, Station, Volcano, Operator, SeismicObservation, EventType). \
+            filter(SeismicObservation.seisobsObservationId == Observation.obsId). \
+            filter(SeismicObservation.seisobsEventTypeId == EventType.typeId). \
+            filter(SeismicObservation.seisobsStationId == Station.stId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId).\
+            order_by(db.desc(SeismicObservation.seisobsId)).limit(count)
+
+        return listSeisobs
+
+    @staticmethod
+    def get_list_satobs_for_period(periodStart, periodEnd):
+        listSeisobs = db.session.query(Observation, Station, Volcano, Operator, SeismicObservation, EventType). \
+            filter(SeismicObservation.seisobsObservationId == Observation.obsId). \
+            filter(SeismicObservation.seisobsEventTypeId == EventType.typeId). \
+            filter(SeismicObservation.seisobsStationId == Station.stId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId). \
+            filter(Observation.obsDate >= periodStart). \
+            filter(Observation.obsDate <= periodEnd).all()
+
+        return listSeisobs
+
+@dataclass()
+class HazardCode(db.Model):
+    __tablename__ = "HazardCode"
+    codId = Column(Integer, primary_key=True)
+    codType = Column(String)
+    codObsId = Column(Integer, ForeignKey('Observation.obsId'))
+    codOperatorId = Column(Integer, ForeignKey('Operator.opId'))
+    codDataSave = Column(DATE)
+
+    @staticmethod
+    def add():
+
+
+    @staticmethod
+    def get_list_last_code(count):
+        listCode =db.session.query(HazardCode, Observation, Volcano, Operator). \
+            filter(HazardCode.codObsId == Observation.obsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId).order_by(db.desc(SatelliteObservation.satobsId)).limit(
+            count)
+
+        return listCode
+
+    @staticmethod
+    def get_list_code_for_period(periodStart, periodEnd):
+        listCode = db.session.query(Observation, Volcano, Operator, HazardCode). \
+            filter(HazardCode.codObsId == Observation.obsId). \
+            filter(Observation.obsVolcanoId == Volcano.volcId). \
+            filter(Observation.obsOperatorId == Operator.opId). \
+            filter(Observation.obsDate >= periodStart). \
+            filter(Observation.obsDate <= periodEnd).all()
+
+        return listCode
