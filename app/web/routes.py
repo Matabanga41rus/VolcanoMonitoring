@@ -51,7 +51,7 @@ def addobservation():
                             volcId=obsAddForm.obsVolcanoId.data,
                             createdBy=current_user.opSurname)
 
-    return render_template('addobservation.html', form=obsAddForm, date=todayDate.date())
+    return render_template('addobservation.html', form=obsAddForm, date=dateTimeServer.date())
 
 @app.route('/observation/video', methods=['GET', 'POST'])
 def addvideoobs():
